@@ -1,0 +1,110 @@
+/* Основные стили */
+body {
+  margin: 0;
+  font-family: "Arial", sans-serif;
+  background: linear-gradient(187deg, #000000, #003288); /* Фон приложения */
+  color: #ffffff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-attachment: fixed;
+}
+
+h2 {
+  margin: 0;
+  margin-bottom: 16px;
+}
+
+p {
+  margin: 0;
+}
+
+/* Эффект стекла для app-container */
+.widget-container {
+  text-align: center;
+  max-width: 400px;
+  width: 90%;
+  padding: 20px;
+  border-radius: 15px;
+  background: linear-gradient(135deg, #849abe, #214176); /* Градиентный фон */
+  box-shadow: 0px 8px 32px rgba(0, 0, 0, 0.5); /* Мягкая тень */
+  backdrop-filter: blur(12px); /* Эффект размытия */
+  border: 1px solid rgba(255, 255, 255, 0.1); /* Лёгкая граница */
+}
+
+/* Заголовок */
+.app-title {
+  font-size: 2rem; /* Уменьшен размер заголовка */
+  font-weight: bold;
+  color: #edf2f7; /* Светлый серо-голубой */
+  margin-bottom: 15px; /* Уменьшен отступ */
+}
+
+/* Поле поиска */
+.search-container {
+}
+
+.search-input {
+  width: 100%;
+  padding: 10px 12px; /* Снижены отступы внутри */
+  font-size: 0.9rem; /* Уменьшен размер текста */
+  border: 1px solid rgba(255, 255, 255, 0.5); /* Полупрозрачная граница */
+  border-radius: 5px;
+  background: rgba(255, 255, 255, 0.1);
+  color: #f0f7ed; /* Светлый текст */
+  outline: none;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  box-sizing: border-box;
+  margin-bottom: 20px;
+}
+
+.search-input:focus {
+  border-color: #63b3ed;
+  box-shadow: 0 0 8px rgba(99, 179, 237, 0.5); /* Голубой акцент при фокусе */
+}
+.search-input::placeholder {
+  color: #ffffff; /* Мягкий серый */
+  opacity: 0.6; /* Полностью непрозрачный (по умолчанию 0.5) */
+}
+
+/* Карточка погоды */
+.weather-card {
+  /* background: linear-gradient(135deg, #98aacb, #103d89); Градиентный фон */
+  padding: 15px; /* Снижены внутренние отступы */
+  border-radius: 10px;
+  /* box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5); Мягкая тень */
+  border: 1px solid rgba(255, 255, 255, 0.5); /* Полупрозрачная граница */
+  border-radius: 5px;
+  text-align: center;
+}
+
+/* Иконка погоды */
+.weather-icon {
+  width: 60px; /* Уменьшен размер иконки */
+  height: 60px;
+}
+
+/* Температура */
+.temperature {
+  font-size: 2.5rem; /* Уменьшен размер текста */
+  color: #63b3ed; /* Голубой акцент */
+  margin: 8px 0; /* Уменьшен отступ */
+  font-weight: bold;
+}
+
+/* Описание состояния погоды */
+.condition {
+  font-size: 1rem; /* Уменьшен размер текста */
+  font-weight: bold;
+  margin: 8px 0; /* Уменьшен отступ */
+  color: #e2e8f0; /* Светло-серый */
+}
+
+/* Детали погоды */
+.weather-details {
+  font-size: 0.8rem; /* Уменьшен размер текста */
+  color: #cbd5e0; /* Мягкий серый */
+  margin-top: 8px; /* Уменьшен отступ */
+  line-height: 1.4; /* Снижен межстрочный интервал */
+}
