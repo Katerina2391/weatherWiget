@@ -29,46 +29,40 @@ function App() {
     )
   }, [])
 
-  useEffect(() => {
-    const controller = new AbortController();
-    const signal = controller.signal;
-    console.log(controller);
+      
+  async function handleCityChange(e) {
+    const newCity = e.target.value;
+    setCity(newCity);
 
     if(!city.trim() && !coords) {
       setWeatherData(null);
       setError(null);
       return;
-    }
-
-    async function getData() {
-      setLoading(true);
-      try {
-        const query = city.trim() ? city : `${coords.latitude},${coords.longitude}`;
-
-        const res = await fetch(`http://api.weatherapi.com/v1/current.json?key=${KEY}&q=${query}`, {
-          signal,
-        });
-        const data = await res.json();
-
-        if(data.error) {
-          setError(data.error.message);
-          setWeatherData(null);
-          return;
-        }
-        
-        setWeatherData(data);
-        setError(null);
-      } catch (err) {
-          console.log(err);
-          setError(err.message);
-          setWeatherData(null);
-      } finally {
-        setLoading(false);
       }
+
+    setLoading(true);
+    try {
+      const query = newCity.trim() ? city : `${coords.latitude},${coords.longitude}`;
+
+      const res = await fetch(`http://api.weatherapi.com/v1/current.json?key=${KEY}&q=${query}`);
+      const data = await res.json();
+
+      if(data.error) {
+        setError(data.error.message);
+        setWeatherData(null);
+        return;
+      }
+      
+      setWeatherData(data);
+      setError(null);
+    } catch (err) {
+        console.log(err);
+        setError(err.message);
+        setWeatherData(null);
+    } finally {
+      setLoading(false);
     }
-    getData();
-    return ()=> {controller.abort()}
-  }, [city, coords]); 
+  }
 
   function renderError() {
     return <p>{error}</p>;
@@ -104,7 +98,7 @@ function App() {
             value={city}
             placeholder="Enter city name"
             className="search-input" 
-            onChange={(e) => setCity(e.target.value)}
+            onChange={handleCityChange}
             />
           </div>
         </div>
