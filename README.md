@@ -7,7 +7,7 @@ It allows users to check current weather by city name or automatically using geo
 
 ## ✨ Live Demo
 
-👉 https://your-vercel-link-here
+👉 npx plugins add vercel/vercel-plugin
 
 ---
 
