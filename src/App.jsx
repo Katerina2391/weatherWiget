@@ -4,6 +4,7 @@ import "./index.css";
 const KEY = "9a107e1554c44844835160348262003";
 
 function App() {
+  const [isGettingLocation, setIsGettingLocation] = useState(true);
   const [city, setCity] = useState("");
   const [weatherData, setWeatherData] = useState(null);
   const [error, setError] = useState(null);
@@ -14,17 +15,20 @@ function App() {
   useEffect(() => {
     if(!navigator.geolocation) {
       setError("Geolocation is not supported by your browser");
+      setIsGettingLocation(false);
       return;
     }
     navigator.geolocation.getCurrentPosition(
       (position) => {
         console.log(position);
         const {latitude, longitude} = position.coords;
-        setCoords({latitude, longitude})
+        setCoords({latitude, longitude});
+        setIsGettingLocation(false);
       }, 
       (err) => {
         console.error("Geolocation error", err.message);
-        setError("Failed to get your location")
+        setError("Failed to get your location");
+        setIsGettingLocation(false);
       }
     )
   }, [])
@@ -32,26 +36,39 @@ function App() {
   useEffect(() => {
     const controller = new AbortController();
     const signal = controller.signal;
-    console.log(controller);
 
-    if(!city.trim() && !coords) {
+    if(!city.trim() && !coords?.latitude) {
       setWeatherData(null);
       setError(null);
+      setLoading(false);
       return;
     }
 
     async function getData() {
       setLoading(true);
       try {
-        const query = city.trim() ? city : `${coords.latitude},${coords.longitude}`;
+        setError(null);
 
-        const res = await fetch(`http://api.weatherapi.com/v1/current.json?key=${KEY}&q=${query}`, {
+        const query =
+          city.trim()
+            ? city
+            : coords
+              ? `${coords.latitude},${coords.longitude}`
+              : "";        
+
+        const res = await fetch(`https://api.weatherapi.com/v1/current.json?key=${KEY}&q=${query}`, {
           signal,
         });
         const data = await res.json();
 
-        if(data.error) {
+        if(data.error) { 
           setError(data.error.message);
+          setWeatherData(null);         
+          return;
+        }
+
+        if (!data || !data.current) {
+          setError("Weather data unavailable");
           setWeatherData(null);
           return;
         }
@@ -59,11 +76,14 @@ function App() {
         setWeatherData(data);
         setError(null);
       } catch (err) {
-          console.log(err);
-          setError(err.message);
-          setWeatherData(null);
+          if (err.name !== "AbortError") {
+            setError(err.message);
+            setWeatherData(null);
+          }
       } finally {
-        setLoading(false);
+          if (!signal.aborted) {
+            setLoading(false);
+          }
       }
     }
     getData();
@@ -83,7 +103,7 @@ function App() {
       <div className="weather-card">
         <h2>{`${weatherData?.location?.name}, ${weatherData?.location?.country}`}</h2>
         <img src={`https:${weatherData?.current?.condition?.icon}`} alt="icon" className="weather-icon" />
-        <p className="temperature">{Math.round(weatherData?.current?.temp_c)}</p>
+        <p className="temperature">{Math.round(weatherData?.current?.temp_c)}°C</p>
         <p className="condition">{weatherData?.current?.condition?.text}</p>
         <div className="weather-details">
           <p>Humidity: {weatherData?.current?.humidity}%</p>
@@ -108,6 +128,7 @@ function App() {
             />
           </div>
         </div>
+        {isGettingLocation && <p>Getting your location...</p>}
         {error && renderError()}
         {loading && renderLoading()}
         {!error && !loading && weatherData && renderWeather()}
